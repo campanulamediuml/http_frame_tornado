@@ -1,6 +1,7 @@
 from tornado.web import RequestHandler
 from app.http.error_code import ERROR_CODE
 from data.server import Data
+from app.http.relay.relay import Relay
 import json
 
 
@@ -27,19 +28,54 @@ class HandlerBase(RequestHandler):
         result['data'] = {}
         return result
 
-    def get_user_base(self):
+    def get_admin_base(self):
         '''
         获取用户基本信息
         :return:
         '''
         token = self.get_argument('token')
-        print(token)
-        conditions = []
-        conditions.append(('token', '=', token))
-
-        return Data.find(Data.USER, conditions)
-
+        res = Relay.get_admin_base(token)
+        return res
         # return user_data
+
+    def is_god(self):
+        '''
+        获取用户基本信息
+        :return:
+        '''
+        token = self.get_argument('token')
+        res = Relay.is_god(token)
+        return res
+
+    def get_player_base(self):
+        '''
+        获取用户基本信息
+        :return:
+        '''
+        token = self.get_argument('token')
+        res = Relay.get_player_base(token)
+        return res
+
+
+    def player_logout(self):
+        '''
+        获取post请求内容
+        :return:
+        '''
+        token = self.get_argument('token')
+        res = Relay.player_logout(token)
+        return res
+
+
+    def admin_logout(self):
+        '''
+        获取post请求内容
+        :return:
+        '''
+        token = self.get_argument('token')
+        res = Relay.admin_logout(token)
+        return res
+
 
 
     def send_ok(self, data = {}):

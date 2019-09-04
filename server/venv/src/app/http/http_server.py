@@ -1,5 +1,5 @@
 from app.http.server.base import ServerBase
-from app.http.relay import Relay
+from app.http.relay.relay import Relay
 
 
 from app.http.mods.test_mod import route_list

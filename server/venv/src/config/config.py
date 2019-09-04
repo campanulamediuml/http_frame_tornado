@@ -12,3 +12,8 @@ http_config = {
     'host':'0.0.0.0',
     'port':9527
 }
+
+push_config = {
+    'host':'0.0.0.0',
+    'port':9001
+}
