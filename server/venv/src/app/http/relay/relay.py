@@ -3,7 +3,7 @@ import json
 from common import common
 from data.server import Data
 
-from app.http.relay import user_manager 
+from app.http.relay.user import user_manager 
 
 
 class Relay(object):
@@ -58,11 +58,20 @@ class Relay(object):
 
     @staticmethod
     def player_logout(token):
+        Relay.user_manager.user_logout(token)
         return Relay.user_manager.player_logout(token)
         # player推出
 
     @staticmethod
     def admin_logout(token):
+        Relay.user_manager.user_logout(token)
         return Relay.user_manager.admin_logout(token)
         # admin退出
+
+    @staticmethod
+    def user_time_out(token):
+        Relay.player_logout(token)
+        Relay.admin_logout(token)
+        Relay.user_manager.user_logout(token)
+        return
 

@@ -17,3 +17,10 @@ push_config = {
     'host':'0.0.0.0',
     'port':9001
 }
+
+# token超时时间
+token_time_out = 3600
+
+# 用户类型
+admin_type=9
+player_type=10
