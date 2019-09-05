@@ -36,9 +36,7 @@ class HandlerBase(RequestHandler):
         :return:
         '''
         token = self.get_argument('token')
-        user = Relay.get_user_by_token(token)
-        if int(time.time()) - user.login_time > config.token_time_out:
-            Relay.user_time_out(token)
+        Relay.token_time_out(token)
         return
 
     def get_admin_base(self):
@@ -46,7 +44,7 @@ class HandlerBase(RequestHandler):
         获取用户基本信息
         :return:
         '''
-        self.token_time_out()
+        # self.token_time_out()
         token = self.get_argument('token')
         res = Relay.get_admin_base(token)
         return res
@@ -57,7 +55,7 @@ class HandlerBase(RequestHandler):
         获取用户基本信息
         :return:
         '''
-        self.token_time_out()
+        # self.token_time_out()
         token = self.get_argument('token')
         res = Relay.get_player_base(token)
         return res

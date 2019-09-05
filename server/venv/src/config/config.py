@@ -6,6 +6,8 @@ db_config = {
     'port':3306,
 }
 
+mongo_address = "mongodb://127.0.0.1:27017"
+
 refresh_time = '00:00:00'
 
 http_config = {
@@ -19,7 +21,7 @@ push_config = {
 }
 
 # token超时时间
-token_time_out = 3600
+token_time_out = 120
 
 # 用户类型
 admin_type=9

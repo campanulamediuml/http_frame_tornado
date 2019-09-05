@@ -23,7 +23,6 @@ class ServerBase(object):
         http_server.bind(self._port, self._host)
         http_server.start(0) 
         # http_server.listen(self._port, self._host)
-
         tornado.ioloop.PeriodicCallback(Scheduler.run, 500).start()
         # Scheduler.run(True)
         tornado.ioloop.IOLoop.current().start()

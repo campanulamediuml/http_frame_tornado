@@ -2,19 +2,22 @@ import time
 import json
 from common import common
 from data.server import Data
+from config import config
+from common.Scheduler import IntervalTask
 
-from app.http.relay.user import user_manager 
+
 
 
 class Relay(object):
     server = None
-    user_manager = user_manager.UserManager()
-    # player_manager = user_manager.UserManager()
+    player_token_dict = {}
+    admin_token_dict = {}
     
     @staticmethod
     def init(server):
         Relay.server = server
         # 创建初始用户
+        Relay.token_refresh()
 
 # 服务器核心操作放在这里
     @staticmethod
@@ -22,56 +25,39 @@ class Relay(object):
         pass
 
     @staticmethod
-    def get_admin_dict():
-        # 获取全部admin字典
-        return Relay.user_manager.get_admin_dict()
+    def token_refresh():
+        IntervalTask(5, Relay.kill_token)
 
     @staticmethod
-    def get_player_dict():
-        # 获取全部player字典
-        return Relay.user_manager.get_player_dict()
-
-    @staticmethod
-    def add_player(token,user_id):
-        # 添加在线player
-        return Relay.user_manager.add_player(token,user_id)
-
-    @staticmethod
-    def add_admin(token,user_id):
-        # 添加在线admin
-        return Relay.user_manager.add_admin(token,user_id)
-
-    @staticmethod
-    def get_admin_base(token):
-        # 根据token获取admin信息
-        return Relay.user_manager.get_admin_base(token)
-
-    @staticmethod
-    def get_player_base(token):
-        # 根据token获取player信息
-        return Relay.user_manager.get_player_base(token)
-
-    @staticmethod
-    def is_god(token):
-        # 判断是不是超级管理员
-        return Relay.user_manager.is_god(token)
-
-    @staticmethod
-    def player_logout(token):
-        Relay.user_manager.user_logout(token)
-        return Relay.user_manager.player_logout(token)
-        # player推出
-
-    @staticmethod
-    def admin_logout(token):
-        Relay.user_manager.user_logout(token)
-        return Relay.user_manager.admin_logout(token)
-        # admin退出
-
-    @staticmethod
-    def user_time_out(token):
-        Relay.player_logout(token)
-        Relay.admin_logout(token)
-        Relay.user_manager.user_logout(token)
+    def kill_token():
+        Relay.remove_time_out_token(Relay.player_token_dict,'player')
+        Relay.remove_time_out_token(Relay.admin_token_dict,'openluat_user')
         return
+        
+    @staticmethod
+    def remove_time_out_token(user_dict,connect_table):
+        now_time = int(time.time())
+        pop_list = []
+        for token in user_dict:
+            if now_time - user_dict[token] > config.token_time_out:
+                pop_list.append(token)
+
+        for token in pop_list:
+            user_dict.pop(token)
+            Data.update(connect_table,[('token','=',token)],{'token':''})
+        return
+
+    @staticmethod
+    def get_admin_dict():
+        return Relay.admin_token_dict
+
+    @staticmethod
+    def add_admin(token):
+        join_time = int(time.time())
+        Relay.admin_token_dict[token] = join_time
+        return
+
+
+
+
 

@@ -2,6 +2,7 @@ from data.server import Data
 from config import config
 from app.http.relay.user import user
 
+
 import time
 
 class UserManager(object):
@@ -16,9 +17,10 @@ class UserManager(object):
         if token in self._user_dict:
             return self._user_dict[token]
         return None
+    # 返回用户对象
 
     def get_all_user_dict(self):
-        return self._user_dict = {}
+        return self._user_dict
 
     def get_player_dict(self):
         return self._player_dict
