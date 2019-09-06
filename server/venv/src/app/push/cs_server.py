@@ -12,16 +12,16 @@ class GameServer(SocketIOBase):
         SocketIOBase.__init__(self, host, port)
         self.user_manager = UserManager()
         Relay.init(self)  # 放在函数尾部
+        return
 
     def register_handles(self):
         WebSocketHandlers.register(self._sio)
+        return
 
     def _update(self):
         IntervalTask(5, self.user_manager.update)
+        return
 
     def send_msg(self, sid, code, msg):
-        # user = Relay.get_user_by_sid(sid)
-        # user_id = user.get_id()
-        # print(user.get_nickname(), '|',user_id, "|",code , msg, datetime.datetime.now())
-        # print(sid)
         self._sio.emit(code, data=msg, room=sid)
+        return 

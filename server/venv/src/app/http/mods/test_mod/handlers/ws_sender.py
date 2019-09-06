@@ -21,6 +21,5 @@ class ws_sender(HandlerBase):
         result['res'] = res
         result['gevent_id'] = id(getcurrent())
         self.send_ok(result)
-        
-       
         return
+

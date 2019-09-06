@@ -50,7 +50,7 @@ class WS_connect(object):
         try:
             self.ws.send('2')
             # self.send_data('heart_beat',{})
-            return
+            return True
         except:
             print('心跳失败，重新连接')
             self.connect()
@@ -60,10 +60,13 @@ class WS_connect(object):
         self.ws.send('42' + json.dumps(['disconnect']))
 
     def send_data(self, code, content):
-        self.send_heart_beat()
-        # try:
+        res = self.send_heart_beat()
+        if res != True:
+            return 
+        
         data = '42' + json.dumps([code, content])
         self.ws.send(data)
+        return True
         # except:
         #     self.connect()
         # self.listen()

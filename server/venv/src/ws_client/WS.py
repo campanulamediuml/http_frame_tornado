@@ -37,7 +37,11 @@ class WSIO(object):
         event_id = id(data)
         print('本次请求的事件id',event_id)
         data['server_token'] = event_id
-        WSC.send_data(code,data)
+        
+        send_status = WSC.send_data(code,data)
+        if send_status != True:
+            return None
+        # 无法发送
 
         time_wait_start = int(time.time())
         while 1:

@@ -19,7 +19,7 @@ class ServerBase(object):
         print("start server")
         print(self._host + ":" + str(self._port))
         tornado.options.parse_command_line()
-        http_server = tornado.httpserver.HTTPServer(tornado.web.Application(self._apps))
+        http_server = tornado.httpserver.HTTPServer(tornado.web.Application(self._apps,debug=True))
         # http_server.bind(self._port, self._host)
         # http_server.start(0) 
         http_server.listen(self._port, self._host)
