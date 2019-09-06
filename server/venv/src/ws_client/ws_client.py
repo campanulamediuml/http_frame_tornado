@@ -92,6 +92,7 @@ class WS_connect(object):
         if 'server_token' in data:
             self.add_item(data['server_token'],data)
         return
+        # 重写监听信息
 
     def listen(self):
         try:

@@ -31,10 +31,10 @@ class WSC(object):
 class WSIO(object):
     # 重写IO
     @staticmethod
-    def send_data(code,data):
+    def send_data(code,data,event_id):
     # 协程函数
         # def run(*args):
-        event_id = id(data)
+        # event_id = 
         print('本次请求的事件id',event_id)
         data['server_token'] = event_id
         

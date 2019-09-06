@@ -6,7 +6,7 @@ import time
 import requests
 import random
 from tornado.concurrent import run_on_executor
-from gevent import getcurrent
+from common.common import get_event_id
 
 class gen_test(HandlerBase):
     @run_on_executor
@@ -22,7 +22,7 @@ class gen_test(HandlerBase):
         # print('admin_dict',,'from gen_test')
         res = {
             'result':self.cal(),
-            'gevent_id':id(getcurrent())
+            'gevent_id':get_event_id()
         }
 
         self.send_ok(res)

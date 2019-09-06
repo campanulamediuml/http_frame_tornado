@@ -1,7 +1,7 @@
 from app.http.handler_base import HandlerBase
 from app.http.relay.relay import Relay
 from tornado.concurrent import run_on_executor
-from gevent import getcurrent
+from common.common import get_event_id
 
 from data.server import Data
 
@@ -10,10 +10,9 @@ from data.server import Data
 class test(HandlerBase):
     @run_on_executor
     def get(self):
-        event_id = id(getcurrent())
 
         res = {
-            'event_id':event_id
+            'event_id':get_event_id()
         }
         
         # res = Data.find('test',[('id','!=',0)])

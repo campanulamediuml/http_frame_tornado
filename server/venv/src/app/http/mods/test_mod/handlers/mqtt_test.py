@@ -6,12 +6,14 @@ from ws_client.WS import WSIO,WSC
 from tornado.concurrent import run_on_executor
 from mqtt_client.MQ import MQ
 from gevent import getcurrent
+from common.common import get_event_id
+import time
 
 class mqtt_test(HandlerBase):
     @run_on_executor
     def get(self):
 
-        event_id = id(getcurrent())
+        event_id = get_event_id()
 
         mq_res = MQ.send_data('chat','from http',event_id)
 
