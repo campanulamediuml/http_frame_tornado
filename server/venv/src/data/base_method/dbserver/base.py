@@ -16,9 +16,9 @@ class Base(object):
 
         IntervalTask(300, self.keep_connect)
 
-    def keep_connect(self):
-        
+    def keep_connect(self):  
         self.query('select 1')
+        # print('发送数')
 
     def connect(self, host, user, psw, dbname):
         self.db = pymysql.connect(self._host, self._user, self._psw, self._dbname, charset='utf8')

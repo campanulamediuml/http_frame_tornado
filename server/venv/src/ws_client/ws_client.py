@@ -12,10 +12,12 @@ import gevent
 class WS_connect(object):
     def __init__(self, SERVER_URL):
         # self.listener = WSRC()
+        print('创建推送链接...')
         self.server_url = SERVER_URL
         self.listener_dict = {}
         self.connect()
         self.keep_connect()
+        print('与推送服务器连接成功！')
 
         # 登录
 
@@ -28,7 +30,7 @@ class WS_connect(object):
             self.login_as_admin()
             # admin状态登录
         except:
-            print('登录失败，服务器超时')
+            print('推送服务器超时')
             return
 
     def keep_connect(self):
@@ -52,7 +54,7 @@ class WS_connect(object):
             # self.send_data('heart_beat',{})
             return True
         except:
-            print('心跳失败，重新连接')
+            print('向推送服务器发送心跳失败，正在重新连接...')
             self.connect()
             return
 
@@ -109,11 +111,16 @@ class WS_connect(object):
         self.listen()
         if event_id in self.listener_dict:
             result = self.listener_dict[event_id]
-            self.listener_dict.pop(event_id)
+            self.del_data_by_event_id(event_id)
             return result
         else:
             return None 
         # 如果存在进程，则返回对应进程内容
+
+    def del_data_by_event_id(self,event_id):
+        if event_id in self.listener_dict:
+            self.listener_dict.pop(event_id)
+        return
 
     def get_wsrc_dict(self):
         return self.listener_dict

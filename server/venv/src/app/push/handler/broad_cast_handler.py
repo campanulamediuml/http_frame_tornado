@@ -79,9 +79,9 @@ class cs_execute():
     def req_test(sid,data):
         print('收到http服务器的推送',sid)
         print(Relay.get_all_admin())
-        CountdownTask(5,Relay.send_msg,(sid, 'ack_test', data))
-        # data['comment'] = 'socketio_server Callback'
-        # Relay.send_msg(sid, 'ack_test', data)
+        # CountdownTask(5,Relay.send_msg,(sid, 'ack_test', data))
+        data['comment'] = 'socketio_server Callback'
+        Relay.send_msg(sid, 'ack_test', data)
 
 
 
