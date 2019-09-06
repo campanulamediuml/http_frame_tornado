@@ -1,4 +1,5 @@
 from tornado.web import RequestHandler
+from concurrent.futures import ThreadPoolExecutor
 from app.http.error_code import ERROR_CODE
 from data.server import Data
 from app.http.relay.relay import Relay
@@ -11,6 +12,7 @@ STATUS_DRUNK = 1      # 微醉
 STATUS_DIZZY = 2      # 大醉
 
 class HandlerBase(RequestHandler):
+    executor = ThreadPoolExecutor(20)
 
     def set_default_headers(self):
         self.set_header('Access-Control-Allow-Origin', '*')

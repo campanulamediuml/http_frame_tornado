@@ -28,4 +28,8 @@ class User(object):
 
     def get_sid(self):
         return self._sid
+
+    def update_heart_beat(self):
+        self._heartbeat_time = int(time.time())
+
         

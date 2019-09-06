@@ -6,4 +6,6 @@ ERROR_CODE = {
     'CAN_NOT_AGAIN_APPLY': (10004, '不能重复申请'),
     'USERNAME_EXISTS':(10006,'用户名已经存在'),
 
+    'WS_CONNECT_TIMEOUT':(20001,'和推送服务器连接超时'),
+
 }

@@ -1,4 +1,4 @@
-import socketio
+from flask_socketio import socketio
 import eventlet.wsgi
 from flask import Flask
 from common.Scheduler import Scheduler

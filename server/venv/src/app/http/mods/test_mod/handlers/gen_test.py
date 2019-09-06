@@ -5,11 +5,11 @@ import json
 import time
 import requests
 import random
-
-
-
+from tornado.concurrent import run_on_executor
+from gevent import getcurrent
 
 class gen_test(HandlerBase):
+    @run_on_executor
     def get(self):
         remote_ip = self.request.remote_ip
         if remote_ip != '127.0.0.1':
@@ -21,7 +21,8 @@ class gen_test(HandlerBase):
         print('admin_dict',admin_dict,'from gen_test',id(admin_dict))
         # print('admin_dict',,'from gen_test')
         res = {
-            'result':self.cal()
+            'result':self.cal(),
+            'gevent_id':id(getcurrent())
         }
 
         self.send_ok(res)
@@ -32,7 +33,7 @@ class gen_test(HandlerBase):
         count = 0
         while 1:
             count += 1
-            if int(time.time()) - now_time > 1:
+            if int(time.time()) - now_time > 20:
                 return count
 
     def random_string(self):

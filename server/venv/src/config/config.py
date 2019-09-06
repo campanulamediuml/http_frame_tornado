@@ -17,8 +17,11 @@ http_config = {
 
 push_config = {
     'host':'0.0.0.0',
-    'port':9001
+    'port':9001,
+    'client_host':'127.0.0.1'
 }
+# ws超时时间
+ws_time_out = 15
 
 # token超时时间
 token_time_out = 120

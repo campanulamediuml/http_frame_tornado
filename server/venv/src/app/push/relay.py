@@ -21,6 +21,14 @@ class Relay(object):
         # 发送消息
         return Relay.server.send_msg(sid, code , data)
 
+    @staticmethod
+    def send_disconnect(sid):
+        return Relay.server.send_msg(sid, 'disconnect' , data=None)
+
+    @staticmethod
+    def update_status(sid):
+        return Relay.user_manager.update_heart_beat(sid)
+
     # ==========和http服务器建立连接===========
 
     @staticmethod
@@ -34,6 +42,10 @@ class Relay(object):
     @staticmethod
     def kill_admin(sid):
         return Relay.user_manager.kill_admin(sid)
+
+    @staticmethod
+    def get_all_admin():
+        return Relay.user_manager.get_all_admin()
 
     # ==========和http服务器建立连接===========
 

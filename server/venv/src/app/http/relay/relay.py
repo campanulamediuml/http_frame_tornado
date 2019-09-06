@@ -57,6 +57,37 @@ class Relay(object):
         Relay.admin_token_dict[token] = join_time
         return
 
+    @staticmethod
+    def get_admin_base(token):
+        if token not in Relay.admin_token_dict:
+            return None
+        res = Data.find('openluat_user',[('token','=',token)])
+        return res
+
+    @staticmethod
+    def get_player_base(token):
+        if token not in Relay.player_token_dict:
+            return None
+        res = Data.find('player',[('token','=',token)])
+        return res
+        
+    @staticmethod
+    def is_god(token):
+        if token not in Relay.admin_token_dict:
+            return False
+
+        res = Data.find('openluat_user',[('token','=',token)])
+        if res == None:
+            return False
+
+        res = Data.find('god',[('openluat_user_id','=',res['id'])])
+        if res == None:
+            return False
+
+        return True
+    # 判断是不是超级管理员
+
+
 
 
 
