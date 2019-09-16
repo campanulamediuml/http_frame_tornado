@@ -7,10 +7,6 @@ from config import config
 import json
 
 
-STATUS_CLEAR = 0      # 清醒
-STATUS_DRUNK = 1      # 微醉
-STATUS_DIZZY = 2      # 大醉
-
 class HandlerBase(RequestHandler):
     executor = ThreadPoolExecutor(20)
 

@@ -13,15 +13,16 @@ class mqtt_test(HandlerBase):
     @run_on_executor
     def get(self):
 
-        event_id = get_event_id()
+        # event_id = get_event_id()
+        data = self.get_data()
+        imei = data['imei']
 
-        mq_res = MQ.send_data('chat','from http',event_id)
+        mq_res,info = MQ.send_start(imei)
 
-        res = {
-            'result':mq_res,
-            'event_id':event_id
-        }
-        
+        if mq_res == True:
         # res = Data.find('test',[('id','!=',0)])
-        self.send_ok(res)
+            self.send_ok(mq_res)
+
+        else:
+            self.write(info)
         return

@@ -4,12 +4,15 @@ import time
 
 class mqtt_connection(object):
 
-    def __init__(self,url,port,client_name):
+    def __init__(self,url,port,token):
         self.MQTTHOST = url
         self.MQTTPORT = port
-        self.client_name = client_name
-        self.mqttClient = mqtt.Client(client_id=self.client_name)
+        self.token = token
+        self.mqttClient = mqtt.Client(client_id='tornado_server'+'_'+token)
         self.msg_group = {}
+        self.result = {
+            self.token:None
+        }
 
     # 连接MQTT服务器
     def disconnect(self):
@@ -28,40 +31,64 @@ class mqtt_connection(object):
         return list(res)
 
     # 消息处理函数
-    def on_message_come(self, lient, userdata, msg):
+    def on_message_come(self, client, userdata, msg):
         print(msg.topic + " " + ":" + str(msg.payload))
-        # print(int(time.time()))
-        event_id = msg.topic.split('/')[-1]
-        if event_id in self.msg_group:
-            self.msg_group[event_id] = str(msg.payload)
-            self.disconnect()
+        items = msg.topic.split('/')
+        if len(items) > 4 and items[4] == "deveventrsp":
+            token = items[5]
+            if msg.payload[0] == 0xc:  # protocol 3.15
+                if msg.payload[1] == 0x54:  # payment notification
+                    data = {}
+                    # [2] result
+                    data['result'] = msg.payload[2]
+                    if token in self.result:
+                        self.result[token] = data
+                        print(token,'收到消息',data)
+                        self.disconnect()
         return
 
+
+    def publish_mqtt_msg(self,topic, msg, qos=0):
+        print("publish_mqtt_msg topic = %s" % (topic))
+        result, mid = self.mqttClient.publish(topic, msg, qos=qos)
+        if result != mqtt.MQTT_ERR_SUCCESS:
+            print("error result %d, mid %d" % (result, mid))
+            return False
+        print("success result %d, mid %d" % (result, mid))
+        return True
+
+
+    def send_to_dev(self,imei,topic,data):
+        mqtt_result = self.publish_mqtt_msg("/v1/device/{0}/{1}/{2}".format(imei, topic, self.token), data)
+        return mqtt_result
+
+
     # subscribe 消息
-    def on_subscribe(self,channel=None):
-        self.mqttClient.subscribe("test_channel", 1)
+    def on_subscribe(self):
+        self.mqttClient.subscribe("/v1/device/+/deveventrsp/+")
+        print('加入监听频道，监听机器回调')
         self.mqttClient.subscribe("/v1/device/+/+", 1)
         self.mqttClient.subscribe("/v1/device/+/+/+", 1)
-        if channel != None:
-            self.mqttClient.subscribe(channel+"/+", 1)
-            print('加入',channel,'/+')
         self.mqttClient.on_message = self.on_message_come # 消息到来处理函数        
         # 加入监听
 
-    def send_message(self,channel,data,event_id):
+    def send_message(self,imei,topic,data):
         # self.creat_connection()
         self.on_mqtt_connect()
-        self.on_subscribe(channel)
-        res = self.on_publish(channel+'/'+event_id,data)
-        self.msg_group[event_id] = None
+        self.on_subscribe()
+        # res = self.on_publish(channel+'/'+event_id,data)
+
+        res = self.send_to_dev(imei,topic,data)
+        
         self.mqttClient.loop_start()
         return res
 
-    def get_send_result(self,event_id):
-        if event_id not in self.msg_group:
-            return None
-        res = self.msg_group[event_id]
-        self.msg_group[event_id] = None
+    def get_send_result(self,token):
+        if token in self.result:
+            res =  self.result[token]
+        else:
+            res =  None
+        self.result[token] = None
         return res
 
 

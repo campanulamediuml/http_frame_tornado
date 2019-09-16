@@ -3,14 +3,14 @@ from config import config
 from pymongo import MongoClient
 import json
 import time
-import datetime
+from datetime import datetime
 
 
 class dbapi(object):
-    mongodb = MongoClient(config.mongo_address)
-    mongodb_wst = MongoClient(config.mongo_address)
+    mongodb = MongoClient(config.mongo_address,connect=False)
+    mongodb_wst = MongoClient(config.mongo_address,connect=False)
 
-    @saticemethod
+    @staticmethod
     def mongo_dict_filter(d):
         if "_id" in d:
             d.pop("_id")
@@ -19,21 +19,22 @@ class dbapi(object):
                 d[k] = int(d[k].timestamp())
         return d
 
-    @saticemethod
+    @staticmethod
     def get_cws_device_status(imei):
         # 查询机器
-        return mongodb.cws.device_status.find_one({'imei': imei})
+        return dbapi.mongodb.cws.device_status.find_one({'imei': imei})
 
     @staticmethod
     def get_cws_device_status_numbers(imeis, online):
         # online 0离线 1在线 4关机
         query = {'imei': {'$in': imeis}, 'online': online}
-        return mongodb.cws.device_status.find(query).count()
+        return dbapi.mongodb.cws.device_status.find(query).count()
 
     @staticmethod
     def insert_datagram(data):
         data['time'] = datetime.now()
-        mongodb.mafu.datagram.insert_one(data)
+        dbapi.mongodb.mafu.datagram.insert_one(data)
+        print('插入通讯记录')
 
     @staticmethod
     def fetch_datagram(dbtype, imei, page=1, psize=10, **kwargs):
@@ -44,9 +45,9 @@ class dbapi(object):
             query['datagram_type'] = kwargs['datagram_type']
 
         if dbtype == 1:
-            mdb = mongodb
+            mdb = dbapi.mongodb
         elif dbtype == 2:
-            mdb = mongodb_wst
+            mdb = dbapi.mongodb_wst
         else:
             print('unkown db type: %d' % dbtype)
             return 0, []

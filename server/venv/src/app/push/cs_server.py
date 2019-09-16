@@ -22,6 +22,6 @@ class GameServer(SocketIOBase):
         IntervalTask(5, self.user_manager.update)
         return
 
-    def send_msg(self, sid, code, msg):
+    def send_msg(self, sid, code, data):
         self._sio.emit(code, data=msg, room=sid)
         return 

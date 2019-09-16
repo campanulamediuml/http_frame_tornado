@@ -11,22 +11,23 @@ import gevent
 
 class WS_connect(object):
     def __init__(self, SERVER_URL):
-        # self.listener = WSRC()
+        # 启动链接
         print('创建推送链接...')
         self.server_url = SERVER_URL
+        # 把传入的网址设置为客户端使用的网址
         self.listener_dict = {}
+        # 创建监听字典
         self.connect()
+        # 链接到服务器
         self.keep_connect()
+        # 保持链接
         print('与推送服务器连接成功！')
-
         # 登录
 
     def connect(self):
         try:
             self.ws = create_connection(self.server_url)
-            # 重写接受方法
-            # 开启连接
-            # 保持连接
+            # 创建连接
             self.login_as_admin()
             # admin状态登录
         except:
